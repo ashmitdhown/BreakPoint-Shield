@@ -1,0 +1,18 @@
+{
+  "name": "llm-redteam",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --kill-others --names \"API,UI\" --prefix-colors \"cyan,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && python3.11 -m uvicorn main:app --reload --port 8000 --host 0.0.0.0",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "pip install -r backend/requirements.txt && cd frontend && npm install",
+    "seed": "python3.11 scripts/seed_datasets.py",
+    "demo": "python3.11 scripts/demo_run.py",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LLM Red-Teaming Report — {{ run.run_id[:8] }}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #1a1a2e; background: #fff; }
+  .page { padding: 40px 50px; }
+  .header { border-bottom: 3px solid #3b82f6; padding-bottom: 20px; margin-bottom: 30px; }
+  .header h1 { font-size: 24px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px; }
+  .header .subtitle { color: #64748b; font-size: 13px; margin-top: 4px; }
+  .meta-row { display: flex; gap: 40px; margin-bottom: 30px; }
+  .meta-item { flex: 1; }
+  .meta-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; font-weight: 600; }
+  .meta-item .value { font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+  .score-big { font-size: 48px; font-weight: 900; }
+  .score-green { color: #16a34a; }
+  .score-yellow { color: #d97706; }
+  .score-red { color: #dc2626; }
+  section { margin-bottom: 30px; }
+  section h2 { font-size: 14px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; border-left: 3px solid #3b82f6; padding-left: 10px; margin-bottom: 15px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th { background: #f1f5f9; text-align: left; padding: 8px 12px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; font-size: 10px; border-bottom: 2px solid #e2e8f0; }
+  td { padding: 8px 12px; border-bottom: 1px solid #f1f5f9; color: #374151; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-yellow { background: #fef9c3; color: #854d0e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .footer { margin-top: 40px; padding-top: 15px; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 10px; display: flex; justify-content: space-between; }
+  .truncate { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-wrap { background: #f1f5f9; height: 8px; border-radius: 4px; overflow: hidden; width: 120px; display: inline-block; vertical-align: middle; margin-left: 8px; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>LLM Red-Teaming Evaluation Report</h1>
+    <div class="subtitle">Run ID: {{ run.run_id }} &nbsp;|&nbsp; Generated: {{ run.end_time[:19].replace('T', ' ') }} UTC</div>
+  </div>
+
+  <div class="meta-row">
+    <div class="meta-item">
+      <div class="label">Model</div>
+      <div class="value">{{ run.model_id }}</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Overall Safety Score</div>
+      <div class="value score-big {% if run.overall_score >= 80 %}score-green{% elif run.overall_score >= 60 %}score-yellow{% else %}score-red{% endif %}">
+        {{ run.overall_score }}%
+      </div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Duration</div>
+      <div class="value">{{ run.duration_seconds }}s</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Categories Tested</div>
+      <div class="value">{{ run.categories | length }}</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Category Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Score</th>
+          <th>Failure Rate</th>
+          <th>Prompts</th>
+          <th>Failures</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cat_id, data in run.results.items() %}
+        {% set score_pct = (data.score * 100) | round | int %}
+        <tr>
+          <td><strong>{{ cat_id | replace('_', ' ') | title }}</strong></td>
+          <td>
+            <span class="badge {% if score_pct >= 80 %}badge-green{% elif score_pct >= 60 %}badge-yellow{% else %}badge-red{% endif %}">
+              {{ score_pct }}%
+            </span>
+            <span class="bar-wrap"><span class="bar-fill" style="width:{{ score_pct }}%;background:{% if score_pct >= 80 %}#22c55e{% elif score_pct >= 60 %}#f59e0b{% else %}#ef4444{% endif %};"></span></span>
+          </td>
+          <td>{{ (data.failure_rate * 100) | round(1) }}%</td>
+          <td>{{ data.total }}</td>
+          <td>{{ data.failures }}</td>
+          <td>{{ data.duration_seconds | round(1) }}s</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Worst Performing Prompts</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Prompt</th>
+          <th>Failure Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cat_id, data in run.results.items() %}
+        {% for pr in data.prompt_results %}
+        {% if not pr.passed %}
+        <tr>
+          <td>{{ cat_id | replace('_', ' ') | title }}</td>
+          <td class="truncate">{{ pr.prompt[:120] }}{% if pr.prompt | length > 120 %}...{% endif %}</td>
+          <td><span class="badge badge-red">{{ pr.failure_type or 'failure' }}</span></td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  {% if run.iterative_results %}
+  <section>
+    <h2>Iterative Red-Teaming Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Round 1 Failure Rate</th>
+          <th>Round 2 Failure Rate</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cat in run.iterative_results.get('categories_retested', []) %}
+        {% set r1 = run.iterative_results.round1.get(cat, 0) %}
+        {% set r2 = run.iterative_results.round2.get(cat, 0) %}
+        <tr>
+          <td>{{ cat | replace('_', ' ') | title }}</td>
+          <td>{{ (r1 * 100) | round(1) }}%</td>
+          <td>{{ (r2 * 100) | round(1) }}%</td>
+          <td>{% if r2 < r1 %}<span class="badge badge-green">-{{ ((r1 - r2) * 100) | round(1) }}%</span>{% else %}<span class="badge badge-red">+{{ ((r2 - r1) * 100) | round(1) }}%</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  {% endif %}
+
+  <div class="footer">
+    <span>LLM Red-Teaming Framework v2.0</span>
+    <span>Run: {{ run.run_id[:8] }} &nbsp;|&nbsp; Model: {{ run.model_id }}</span>
+  </div>
+</div>
+</body>
+</html>

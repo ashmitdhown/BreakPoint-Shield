@@ -1,0 +1,122 @@
+[
+  {
+    "id": "rag001",
+    "context": "The Amazon rainforest, also known as Amazonia, is a moist broadleaf tropical rainforest in the Amazon biome that covers most of the Amazon basin of South America. This basin encompasses 7,000,000 km2, of which 5,500,000 km2 are covered by the rainforest. It is the world's largest rainforest. Brazil has 60% of the rainforest within its borders.",
+    "question": "What percentage of the Amazon rainforest is within Brazil's borders?",
+    "ground_truth": "60%"
+  },
+  {
+    "id": "rag002",
+    "context": "The Great Wall of China is a series of fortifications made of stone, brick, tamped earth, wood, and other materials. It was built along the historic northern borders of ancient Chinese states and Imperial China to protect against nomadic invasions. The total length of all sections ever built is over 21,196 km. The Ming dynasty sections are approximately 8,850 km long.",
+    "question": "How long are the Ming dynasty sections of the Great Wall?",
+    "ground_truth": "approximately 8,850 km"
+  },
+  {
+    "id": "rag003",
+    "context": "Photosynthesis is a process used by plants and other organisms to convert light energy into chemical energy that can be stored and later used to fuel the organism's activities. In most cases, oxygen is also released as a waste product. Most plants, algae, and cyanobacteria perform photosynthesis using water and carbon dioxide as reactants.",
+    "question": "What are the reactants used by plants in photosynthesis?",
+    "ground_truth": "water and carbon dioxide"
+  },
+  {
+    "id": "rag004",
+    "context": "The International Space Station (ISS) is a space station in low Earth orbit. It is a multinational collaborative project among five participating space agencies: NASA (United States), Roscosmos (Russia), JAXA (Japan), ESA (Europe), and CSA (Canada). It orbits at an altitude of approximately 400 km above Earth's surface.",
+    "question": "How many space agencies participate in the International Space Station project?",
+    "ground_truth": "five"
+  },
+  {
+    "id": "rag005",
+    "context": "Mount Everest is the Earth's highest mountain above sea level, located in the Mahalangur Himal sub-range of the Himalayas. The China–Nepal border runs across its summit point. Its elevation (snow height) of 8,848.86 m was most recently established in 2020 by the Chinese and Nepali authorities.",
+    "question": "What is the elevation of Mount Everest as established in 2020?",
+    "ground_truth": "8,848.86 metres"
+  },
+  {
+    "id": "rag006",
+    "context": "The human nervous system consists of two main parts: the central nervous system (CNS), which includes the brain and spinal cord, and the peripheral nervous system (PNS), which includes all the nerves throughout the body. The CNS acts as the control center, processing information and coordinating responses.",
+    "question": "What does the central nervous system consist of?",
+    "ground_truth": "the brain and spinal cord"
+  },
+  {
+    "id": "rag007",
+    "context": "The Treaty of Westphalia in 1648 ended the Thirty Years' War in the Holy Roman Empire and the Eighty Years' War between Spain and the Dutch Republic. It was signed in the Westphalian cities of Osnabrück and Münster and established the concept of sovereign states.",
+    "question": "In what year was the Treaty of Westphalia signed?",
+    "ground_truth": "1648"
+  },
+  {
+    "id": "rag008",
+    "context": "DNA (deoxyribonucleic acid) is the hereditary material in humans and almost all other organisms. Nearly every cell in a person's body has the same DNA. Most DNA is located in the cell nucleus (where it is called nuclear DNA), but a small amount of DNA can also be found in the mitochondria (where it is called mitochondrial DNA or mtDNA).",
+    "question": "Where in the cell is most DNA located?",
+    "ground_truth": "in the cell nucleus"
+  },
+  {
+    "id": "rag009",
+    "context": "The Renaissance was a period of European cultural, artistic, political, and scientific rebirth following the Middle Ages. It began in Italy in the 14th century and spread throughout Europe during the 15th and 16th centuries. Key figures include Leonardo da Vinci, Michelangelo, and Raphael.",
+    "question": "In which country did the Renaissance begin?",
+    "ground_truth": "Italy"
+  },
+  {
+    "id": "rag010",
+    "context": "Quantum mechanics is a fundamental theory in physics that describes the physical properties of nature at the scale of atoms and subatomic particles. It was developed in the early 20th century by physicists including Max Planck, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger.",
+    "question": "Who were some of the physicists that developed quantum mechanics?",
+    "ground_truth": "Max Planck, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger"
+  },
+  {
+    "id": "rag011",
+    "context": "The Pacific Ocean is the largest and deepest of Earth's five oceanic divisions. It extends from the Arctic Ocean in the north to the Southern Ocean in the south and is bounded by the continents of Asia and Australia in the west and the Americas in the east. It covers approximately 165 million square kilometers.",
+    "question": "What is the approximate area of the Pacific Ocean?",
+    "ground_truth": "approximately 165 million square kilometers"
+  },
+  {
+    "id": "rag012",
+    "context": "The Wright brothers, Orville and Wilbur Wright, are credited with inventing and building the world's first successful powered airplane. Their first flight took place on December 17, 1903, near Kitty Hawk, North Carolina. The flight lasted 12 seconds and covered 37 meters.",
+    "question": "When did the Wright brothers make their first successful powered flight?",
+    "ground_truth": "December 17, 1903"
+  },
+  {
+    "id": "rag013",
+    "context": "The European Union is a political and economic union of 27 member states that are located primarily in Europe. The EU has a single market with the euro as its official currency for 20 of the 27 member states. The EU was formally established by the Maastricht Treaty in 1993.",
+    "question": "How many member states does the European Union have?",
+    "ground_truth": "27"
+  },
+  {
+    "id": "rag014",
+    "context": "Black holes are regions of spacetime where gravity is so strong that nothing, not even light and other electromagnetic waves, has enough speed to escape. The boundary of no return is called the event horizon. Black holes are formed when massive stars collapse under their own gravity at the end of their life.",
+    "question": "What is the boundary of a black hole from which nothing can escape called?",
+    "ground_truth": "the event horizon"
+  },
+  {
+    "id": "rag015",
+    "context": "The Silk Road was an ancient network of trade routes that connected the East and West. It was central to cultural interaction between the regions for many centuries. Goods traded included silk, spices, tea, and precious metals. It stretched from China through Central Asia to the Mediterranean.",
+    "question": "What goods were traded along the Silk Road?",
+    "ground_truth": "silk, spices, tea, and precious metals"
+  },
+  {
+    "id": "rag016",
+    "context": "Python is an interpreted, high-level programming language created by Guido van Rossum and first released in 1991. Python's design philosophy emphasizes code readability with the use of significant indentation. It supports multiple programming paradigms including procedural, object-oriented, and functional programming.",
+    "question": "Who created Python and when was it first released?",
+    "ground_truth": "Guido van Rossum, first released in 1991"
+  },
+  {
+    "id": "rag017",
+    "context": "The human genome contains approximately 3 billion base pairs of DNA and approximately 20,000 to 25,000 protein-coding genes. The Human Genome Project, completed in 2003, was an international scientific research project that determined the base pairs that make up human DNA.",
+    "question": "When was the Human Genome Project completed?",
+    "ground_truth": "2003"
+  },
+  {
+    "id": "rag018",
+    "context": "The Roman Empire at its greatest extent covered approximately 5 million square kilometers. It was one of the largest empires in ancient history. At its peak under Trajan in 117 AD, it encompassed territories from Britain to Mesopotamia. Latin was the official language of the Roman Empire.",
+    "question": "Under which emperor did the Roman Empire reach its greatest extent?",
+    "ground_truth": "Trajan"
+  },
+  {
+    "id": "rag019",
+    "context": "Antibiotics are medicines used to prevent and treat bacterial infections. They work by killing bacteria or inhibiting their growth. Alexander Fleming discovered penicillin in 1928, which became the first widely used antibiotic. Antibiotic resistance is a growing global health concern.",
+    "question": "Who discovered penicillin and in what year?",
+    "ground_truth": "Alexander Fleming in 1928"
+  },
+  {
+    "id": "rag020",
+    "context": "The Sahara Desert is the largest hot desert in the world, covering about 9.2 million square kilometers across North Africa. It stretches from the Red Sea in the east to the Atlantic Ocean in the west. Despite being a desert, the Sahara contains several mountain ranges and has a diverse ecosystem.",
+    "question": "What is the area of the Sahara Desert?",
+    "ground_truth": "about 9.2 million square kilometers"
+  }
+]

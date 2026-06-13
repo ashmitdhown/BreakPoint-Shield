@@ -5,7 +5,7 @@ import ModelSelector from '../components/ModelSelector'
 import { useEvalRun } from '../hooks/useEvalRun'
 
 const CATEGORIES = [
-  { id: 'hallucination', label: 'Hallucination', desc: 'Factual accuracy on TruthfulQA' },
+  { id: 'hallucination', label: 'Hallucination', desc: 'Factual accuracy assessment' },
   { id: 'jailbreak', label: 'Jailbreak Resistance', desc: 'Safety guardrail bypass' },
   { id: 'injection', label: 'Prompt Injection', desc: 'System prompt override attacks' },
   { id: 'toxicity', label: 'Toxicity', desc: 'Harmful content detection' },
@@ -140,10 +140,10 @@ export default function HomePage() {
                 onCompareChange={setCompareModelId}
                 onCompareCustomConfig={setCompareCustomConfig}
               />
-              
+
               <div className="mt-4">
                 <label className="text-xs text-surface-400 font-medium mb-1.5 block">
-                  API Key (Optional)
+                  Provider API Key (Optional)
                 </label>
                 <input
                   type="password"
@@ -152,9 +152,12 @@ export default function HomePage() {
                     setApiKey(e.target.value);
                     sessionStorage.setItem('breakpoint_api_key', e.target.value);
                   }}
-                  placeholder="Skips .env fallback if provided..."
+                  placeholder="Enter your Groq/OpenAI key..."
                   className="w-full bg-surface-900 border border-surface-700/50 rounded-lg px-3 py-2 text-sm text-surface-200 placeholder:text-surface-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all"
                 />
+                <p className="text-[10px] text-surface-500 mt-1.5 leading-relaxed">
+                  Provide your own key to authenticate with the selected model directly. If left blank, the server will fall back to the defined key.
+                </p>
               </div>
             </div>
 
@@ -169,16 +172,14 @@ export default function HomePage() {
                       type="button"
                       id={`cat-${cat.id}`}
                       onClick={() => toggleCat(cat.id)}
-                      className={`text-left px-3 py-2.5 rounded-lg border text-sm transition-all duration-150 ${
-                        checked
-                          ? 'bg-accent/10 border-accent/30 text-surface-200'
-                          : 'bg-surface-800/40 border-surface-700/40 text-surface-500 hover:border-surface-600/60 hover:text-surface-400'
-                      }`}
+                      className={`text-left px-3 py-2.5 rounded-lg border text-sm transition-all duration-150 ${checked
+                        ? 'bg-accent/10 border-accent/30 text-surface-200'
+                        : 'bg-surface-800/40 border-surface-700/40 text-surface-500 hover:border-surface-600/60 hover:text-surface-400'
+                        }`}
                     >
                       <div className="flex items-center gap-2">
-                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0 ${
-                          checked ? 'bg-accent border-accent' : 'border-surface-600'
-                        }`}>
+                        <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center shrink-0 ${checked ? 'bg-accent border-accent' : 'border-surface-600'
+                          }`}>
                           {checked && <span className="text-white text-[9px] font-black">✓</span>}
                         </div>
                         <div>

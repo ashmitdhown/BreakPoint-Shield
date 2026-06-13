@@ -73,6 +73,8 @@ export const useEvalStore = create((set, get) => ({
             type: msg.latest_result === 'fail' ? 'fail' : 'pass',
             category: msg.category,
             prompt: msg.latest_prompt,
+            ts: new Date().toISOString(),
+          },
         ],
         martPhase: state.martPhase === 'analyzing' ? 'round2' : state.martPhase,
       }))

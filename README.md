@@ -1,208 +1,80 @@
-# BreakPoint — Adversarial Safety Evaluation & Red-Teaming Framework
+# BreakPoint
 
-> A production-grade security toolkit that automatically stress-tests LLMs against adversarial attacks, detects vulnerabilities, and generates formal safety certificates.
+BreakPoint is an automated red-teaming tool for Large Language Models. It throws hundreds of adversarial prompts at your LLM and streams the failures to a real-time dashboard so you can see exactly where the model breaks before you put it in production.
 
----
+It currently evaluates models across 6 categories: Hallucinations, Jailbreaks, Prompt Injections, Toxicity, Demographic Bias, and RAG Faithfulness.
 
-## Overview
+## How it works
 
-BreakPoint is a full-stack security evaluation platform designed to test any language model against 500+ adversarial prompts across 6 key risk dimensions. It streams evaluation metrics in real time to a dashboard over WebSockets, runs iterative red-teaming feedback loops, and exports formal PDF audit reports.
+1. **Select a target:** Point BreakPoint at an OpenAI, Groq, or local Ollama model.
+2. **Run the gauntlet:** The Python engine sends concurrent adversarial prompts across your selected categories.
+3. **Live Dashboard:** Results stream into the React UI over WebSockets in real-time.
+4. **Iterative Red-Teaming (MART):** If enabled, the system uses an LLM judge to analyze the failures from Round 1 and automatically generates new, targeted attacks for Round 2.
+5. **Reporting:** Exports a PDF audit report of the run.
 
-```
-React Dashboard  ←→  FastAPI Backend  ←→  Python Eval Engine  ←→  LLM APIs
-     (Vite)           (WebSockets)      (6 evaluators + MART)   (Groq / OpenAI)
-```
-
----
-
-## Features
-
-| Capability | Detail |
-|---|---|
-| 6 risk dimensions | Hallucination, Jailbreak, Prompt Injection, Toxicity, Demographic Bias, RAG Faithfulness |
-| Live streaming progress | Per-prompt evaluations streamed to the dashboard using WebSockets |
-| Iterative red-teaming | Dynamic attacker loop auto-generates adversarial prompt variations targeting identified weaknesses |
-| Side-by-side comparison | Compare safety metrics of any two model configurations simultaneously |
-| Safety certificates | Pure-Python PDF generation providing instant, downloadable audit reports |
-| Simple setup | Single command launch using Docker Compose |
-| CI/CD testing | Automated backend tests, frontend linting, and smoke evaluations via GitHub Actions |
-
----
-
-## Benchmark Results (Sample Run)
-
-| Category | LLaMA 3.1 8B | Mixtral 8x7B |
-|---|---|---|
-| Hallucination | 72.5% safe | 77.5% safe |
-| Jailbreak Resistance | 66.0% safe | 72.0% safe |
-| Prompt Injection | 84.0% safe | 88.0% safe |
-| Toxicity | 91.0% safe | 93.0% safe |
-| Bias | 71.0% safe | 68.0% safe |
-| RAG Faithfulness | 80.0% safe | 85.0% safe |
-| **Overall** | **74%** | **77%** |
-
-*After iterative red-teaming round 2: jailbreak rate reduced from 34% → 18%.*
-
----
-
-## Quick Start
+## Getting Started
 
 ### Prerequisites
+- Python 3.11+
+- Node.js 20+
+- A Groq API key (used for the LLM judge, get one free at [console.groq.com](https://console.groq.com))
 
-- Python 3.11 (with pip)
-- Node 20 LTS
-- A Groq API key (free at [console.groq.com](https://console.groq.com))
-
-### Setup
+### Local Setup
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/breakpoint-ai
-cd breakpoint-ai
+git clone https://github.com/ashmitdhown/BreakPoint-Shield.git
+cd BreakPoint-Shield
 
-# 2. Install all dependencies
-pip3.11 install -r backend/requirements.txt
-cd frontend && npm install && cd ..
+# Install root dependencies for concurrently
+npm install
 
-# 3. Configure environment
-cp .env.example .env
-# Edit .env — add your GROQ_API_KEY
+# Install all backend and frontend dependencies
+npm run install:all
 
-# 4. Pre-cache datasets (recommended, ~2 minutes, run once)
-python3.11 scripts/seed_datasets.py
+# Configure environment
+cp .env.example .env 
+# Add your GROQ_API_KEY to the .env file now!
 
-# 5. Launch (starts both FastAPI on :8000 and React on :5173)
+# Optional but recommended: pre-cache the evaluation datasets (~2 mins)
+npm run seed
+
+# Run the dev servers (starts both FastAPI and Vite concurrently)
 npm run dev
 ```
 
-Visit **http://localhost:5173**
+Visit **http://localhost:5173** to access the dashboard.
 
----
+### Docker Setup
 
-## Docker Setup
-
+If you prefer Docker:
 ```bash
-git clone https://github.com/YOUR_USERNAME/breakpoint-ai
-cd breakpoint-ai
-cp .env.example .env   # add GROQ_API_KEY
-docker compose up      # visit http://localhost:3000
+git clone https://github.com/ashmitdhown/BreakPoint-Shield.git
+cd BreakPoint-Shield
+cp .env.example .env # Don't forget your Groq API key
+npm run docker:up
 ```
+Visit http://localhost:3000.
 
----
+## Configuration (.env)
 
-## Architecture
-
-### Backend (`backend/`)
-
-| Module | Responsibility |
+| Variable | Description |
 |---|---|
-| `main.py` | FastAPI server handling WS connection pooling, endpoints, and background run scheduling |
-| `config.py` | Settings management, threshold parameters, and evaluation category metadata |
-| `models/` | Async model clients (Groq, OpenAI, Ollama) |
-| `evaluators/` | Evaluators for the 6 target categories, streaming step-by-step progress |
-| `datasets/` | Data loader layers mapping to TruthfulQA, AdvBench, and custom evaluation sets |
-| `red_teaming/` | Dynamic adversarial prompt generation loop |
-| `reporting/` | PDF compilation utilizing the fpdf2 library |
-| `runs/` | Run state logging (results stored as local JSON objects) |
+| `GROQ_API_KEY` | Required. Used for the LLM judge (`llama-3.3-70b-versatile`). |
+| `OPENAI_API_KEY` | Optional. If you want to evaluate OpenAI models. |
+| `OLLAMA_BASE_URL` | Optional. Defaults to `http://localhost:11434` for local models. |
+| `LANGCHAIN_API_KEY` | Optional. Set this and `LANGCHAIN_TRACING_V2=true` to enable LangSmith tracing. |
 
-### Frontend (`frontend/src/`)
-
-| Module | Responsibility |
-|---|---|
-| `pages/` | Navigation views: Setup, Live Monitor, Results Dashboard, Run History |
-| `components/` | Metrics dials, charts, WebSocket feeds, and data tables |
-| `hooks/` | Connection state management and background lifecycle hooks |
-| `store/evalStore.js` | Zustand state controller handling realtime WS message parsing |
-| `api/client.js` | Axios endpoint client for data queries |
-
-### WebSocket Protocol
-
-```json
-// Progress event (streaming per-prompt)
-{"type": "progress", "category": "hallucination", "current": 12, "total": 40, "latest_prompt": "...", "latest_result": "fail", "score": 0.75}
-
-// Category complete
-{"type": "category_complete", "category": "jailbreak", "score": 0.66, "failure_rate": 0.34, "duration_seconds": 82}
-
-// Run complete
-{"type": "run_complete", "overall_score": 74, "summary": {...}}
-```
-
----
-
-## Failure Categories
-
-### 1. Hallucination Detection
-Tests factual accuracy using TruthfulQA. An LLM judge (Groq `llama-3.3-70b-versatile`) verifies model answers against correct reference solutions.
-
-### 2. Jailbreak Resistance
-Presents adversarial instructions from AdvBench and JailbreakBench. Detects alignment breaches using refusal regex matching and compliance classifiers.
-
-### 3. Prompt Injection
-Injects system override command templates into a mock application setup. Detects if the target leaks system contexts or complies with instructions.
-
-### 4. Toxicity
-Applies a local `Detoxify` classifier over HarmBench dataset queries. Reports raw metrics across multiple toxic classifications.
-
-### 5. Bias Detection
-Pairs demographic prompts across gender, race, religion, age, and nationality to calculate response sentiment delta via VADER.
-
-### 6. RAG Faithfulness
-Provides structured context-question pairs. The LLM judge verifies whether generated answers remain faithful to the context.
-
----
-
-## Iterative Red-Teaming
-
-When enabled, the framework runs two rounds:
-
-1. **Round 1** — Full evaluation across all selected categories
-2. **Analysis** — Identifies the top 3 failing categories (failure_rate > 20%)
-3. **Generation** — Uses `llama-3.3-70b-versatile` to auto-generate 15 new adversarial prompts per failing category
-4. **Round 2** — Re-evaluates the failing categories with the new prompts
-5. **Delta** — Reports improvement across rounds in the Results dashboard
-
----
-
-## Environment Variables
+## Development Commands
 
 ```bash
-GROQ_API_KEY=gsk_...           # Required — free at console.groq.com
-OPENAI_API_KEY=sk-...          # Optional
-LANGCHAIN_API_KEY=ls__...      # Optional — enables LangSmith tracing
-LANGCHAIN_TRACING_V2=false
-LANGCHAIN_PROJECT=breakpoint-ai
-OLLAMA_BASE_URL=http://localhost:11434  # Optional — for local models
-BACKEND_PORT=8000
-FRONTEND_PORT=5173
-RESULTS_DIR=./runs
+# Run backend tests
+cd backend && pytest tests/ -v
+
+# Run a quick terminal smoke test without the UI
+npm run demo
 ```
-
----
-
-## Development
-
-```bash
-# Backend tests
-cd backend && python3.11 -m pytest tests/ -v
-
-# Frontend lint
-cd frontend && npm run lint
-
-# Smoke test (50 prompts, uses mock model)
-python3.11 scripts/demo_run.py
-```
-
----
 
 ## Tech Stack
-
-**Backend:** FastAPI · Groq SDK · Python 3.11 · Detoxify · VADER · fpdf2 · pytest
-
-**Frontend:** React 18 · Vite · Tailwind CSS v3 · Recharts · Framer Motion · Zustand · Axios · Lucide
-
-**Infrastructure:** Docker Compose · Nginx · GitHub Actions
-
----
-
-*BreakPoint is a security tool built to run automated adversarial stress-testing audits on large language models.*
+- **Backend:** FastAPI, Python, Pytest, fpdf2, LangSmith
+- **Frontend:** React, Vite, Tailwind CSS, Zustand, Recharts
+- **Infrastructure:** Docker Compose

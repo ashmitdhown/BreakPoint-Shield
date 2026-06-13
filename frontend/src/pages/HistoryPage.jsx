@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { Clock, Search, Trash2, ChevronRight, Loader2, History, AlertTriangle } from 'lucide-react'
-import { getHistory, deleteRun } from '../api/client'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Clock, Search, Trash2, ChevronRight, Loader2, History, AlertTriangle, X } from 'lucide-react'
+import { getHistory, deleteRun, deleteAllHistory } from '../api/client'
 
 function scoreColor(score) {
   if (score == null) return 'text-surface-500'
@@ -35,6 +35,8 @@ export default function HistoryPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [deleting, setDeleting] = useState(null)
+  const [clearConfirm, setClearConfirm] = useState(false)
+  const [clearingAll, setClearingAll] = useState(false)
 
   const fetchHistory = () => {
     setLoading(true)
@@ -61,6 +63,23 @@ export default function HistoryPage() {
     }
   }
 
+  const handleClearAll = async () => {
+    setClearingAll(true)
+    try {
+      await deleteAllHistory()
+      setRuns((prev) => prev.filter((r) => r.run_id === 'sample-demo-run-0001' || r.run_id === 'sample_run'))
+    } catch {
+      // silently ignore
+    } finally {
+      setClearingAll(false)
+      setClearConfirm(false)
+    }
+  }
+
+  const deletableRuns = runs.filter(
+    (r) => r.run_id !== 'sample-demo-run-0001' && r.run_id !== 'sample_run'
+  )
+
   const filtered = runs.filter(
     (r) =>
       !search ||
@@ -70,13 +89,61 @@ export default function HistoryPage() {
 
   return (
     <div className="page-container flex flex-col gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold text-surface-50">Evaluation History</h1>
           <p className="text-sm text-surface-500 mt-1">
             {runs.length} run{runs.length !== 1 ? 's' : ''} recorded
           </p>
         </div>
+
+        {deletableRuns.length > 0 && (
+          <div className="flex items-center gap-3">
+            <AnimatePresence>
+              {clearConfirm ? (
+                <motion.div
+                  key="confirm"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  className="flex items-center gap-2"
+                >
+                  <span className="text-sm text-surface-400">Delete {deletableRuns.length} run{deletableRuns.length !== 1 ? 's' : ''}?</span>
+                  <button
+                    id="confirm-clear-all-btn"
+                    onClick={handleClearAll}
+                    disabled={clearingAll}
+                    className="btn-ghost text-sm text-danger hover:bg-danger/10 px-3 py-1.5 border border-danger/30"
+                  >
+                    {clearingAll
+                      ? <Loader2 size={13} className="animate-spin" />
+                      : 'Confirm'}
+                  </button>
+                  <button
+                    onClick={() => setClearConfirm(false)}
+                    className="btn-ghost px-2 py-1.5 text-surface-500"
+                    id="cancel-clear-all-btn"
+                  >
+                    <X size={14} />
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.button
+                  key="trigger"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  id="clear-all-history-btn"
+                  onClick={() => setClearConfirm(true)}
+                  className="btn-ghost text-sm text-danger hover:bg-danger/10 flex items-center gap-1.5 px-3 py-1.5 border border-danger/20"
+                >
+                  <Trash2 size={13} />
+                  Clear All
+                </motion.button>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
 
       <div className="relative max-w-sm">
@@ -137,6 +204,9 @@ export default function HistoryPage() {
                       {run.run_id === 'sample-demo-run-0001' && (
                         <span className="badge badge-accent text-xs">demo</span>
                       )}
+                      {run.iterative_mode && (
+                        <span className="badge badge-neutral text-xs">iterative</span>
+                      )}
                     </div>
                     <div className="text-xs text-surface-600 mt-0.5">
                       {run.model_id?.split(':')[0] || ''}
@@ -165,7 +235,7 @@ export default function HistoryPage() {
                   </td>
                   <td className="px-4 py-3.5 border-b border-surface-800/60">
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      {run.run_id !== 'sample-demo-run-0001' && (
+                      {run.run_id !== 'sample-demo-run-0001' && run.run_id !== 'sample_run' && (
                         <button
                           onClick={(e) => handleDelete(e, run.run_id)}
                           disabled={deleting === run.run_id}

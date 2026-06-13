@@ -12,11 +12,15 @@ class OpenAIModel(BaseLLM):
         self,
         api_key: str,
         model_name: str = "gpt-4o-mini",
+        base_url: Optional[str] = None,
         temperature: float = 0.0,
         max_tokens: int = 1024,
     ):
         super().__init__(model_name, temperature, max_tokens)
-        self._client = AsyncOpenAI(api_key=api_key)
+        kwargs = {"api_key": api_key}
+        if base_url:
+            kwargs["base_url"] = base_url
+        self._client = AsyncOpenAI(**kwargs)
 
     async def complete(
         self,

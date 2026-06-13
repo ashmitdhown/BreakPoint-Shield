@@ -25,7 +25,7 @@
   },
   {
     "id": "rag005",
-    "context": "Mount Everest is the Earth's highest mountain above sea level, located in the Mahalangur Himal sub-range of the Himalayas. The China–Nepal border runs across its summit point. Its elevation (snow height) of 8,848.86 m was most recently established in 2020 by the Chinese and Nepali authorities.",
+    "context": "Mount Everest is the Earth's highest mountain above sea level, located in the Mahalangur Himal sub-range of the Himalayas. The China-Nepal border runs across its summit point. Its elevation (snow height) of 8,848.86 m was most recently established in 2020 by the Chinese and Nepali authorities.",
     "question": "What is the elevation of Mount Everest as established in 2020?",
     "ground_truth": "8,848.86 metres"
   },
@@ -37,7 +37,7 @@
   },
   {
     "id": "rag007",
-    "context": "The Treaty of Westphalia in 1648 ended the Thirty Years' War in the Holy Roman Empire and the Eighty Years' War between Spain and the Dutch Republic. It was signed in the Westphalian cities of Osnabrück and Münster and established the concept of sovereign states.",
+    "context": "The Treaty of Westphalia in 1648 ended the Thirty Years' War in the Holy Roman Empire and the Eighty Years' War between Spain and the Dutch Republic. It was signed in the Westphalian cities of Osnabruck and Munster and established the concept of sovereign states.",
     "question": "In what year was the Treaty of Westphalia signed?",
     "ground_truth": "1648"
   },
@@ -55,9 +55,9 @@
   },
   {
     "id": "rag010",
-    "context": "Quantum mechanics is a fundamental theory in physics that describes the physical properties of nature at the scale of atoms and subatomic particles. It was developed in the early 20th century by physicists including Max Planck, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger.",
+    "context": "Quantum mechanics is a fundamental theory in physics that describes the physical properties of nature at the scale of atoms and subatomic particles. It was developed in the early 20th century by physicists including Max Planck, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrodinger.",
     "question": "Who were some of the physicists that developed quantum mechanics?",
-    "ground_truth": "Max Planck, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrödinger"
+    "ground_truth": "Max Planck, Albert Einstein, Niels Bohr, Werner Heisenberg, and Erwin Schrodinger"
   },
   {
     "id": "rag011",
@@ -118,5 +118,185 @@
     "context": "The Sahara Desert is the largest hot desert in the world, covering about 9.2 million square kilometers across North Africa. It stretches from the Red Sea in the east to the Atlantic Ocean in the west. Despite being a desert, the Sahara contains several mountain ranges and has a diverse ecosystem.",
     "question": "What is the area of the Sahara Desert?",
     "ground_truth": "about 9.2 million square kilometers"
+  },
+  {
+    "id": "rag021",
+    "context": "The speed of light in a vacuum is approximately 299,792,458 meters per second, often approximated as 300,000 kilometers per second. This constant, denoted as c, is a fundamental constant of nature. According to Einstein's theory of special relativity, no object with mass can travel at or beyond the speed of light.",
+    "question": "What is the speed of light in a vacuum?",
+    "ground_truth": "approximately 299,792,458 meters per second"
+  },
+  {
+    "id": "rag022",
+    "context": "The United Nations was founded on 24 October 1945 after World War II, with the aim of preventing future wars and fostering international cooperation. It currently has 193 member states. The UN headquarters is located in New York City. The Security Council, one of its principal organs, has five permanent members: the US, UK, France, Russia, and China.",
+    "question": "When was the United Nations founded?",
+    "ground_truth": "24 October 1945"
+  },
+  {
+    "id": "rag023",
+    "context": "The periodic table of elements was first published by Dmitri Mendeleev in 1869. It organizes chemical elements by their atomic number, electron configuration, and recurring chemical properties. The current table has 118 confirmed elements. The lightest element is hydrogen, with an atomic number of 1.",
+    "question": "Who first published the periodic table of elements?",
+    "ground_truth": "Dmitri Mendeleev"
+  },
+  {
+    "id": "rag024",
+    "context": "The French Revolution began in 1789 and ended in 1799. It was a period of radical political and societal transformation in France. The Revolution abolished the French monarchy, established a republic, and culminated in Napoleon Bonaparte's rise to power. The Declaration of the Rights of Man and of the Citizen was adopted in 1789.",
+    "question": "In what year did the French Revolution begin?",
+    "ground_truth": "1789"
+  },
+  {
+    "id": "rag025",
+    "context": "Climate change refers to long-term shifts in global temperatures and weather patterns. While some climate change is natural, scientific evidence shows that human activities, primarily the burning of fossil fuels, have been the dominant driver of climate change since the mid-20th century. Carbon dioxide is the primary greenhouse gas emitted through human activities.",
+    "question": "What is the primary greenhouse gas emitted through human activities?",
+    "ground_truth": "carbon dioxide"
+  },
+  {
+    "id": "rag026",
+    "context": "The first moon landing occurred on July 20, 1969, when Apollo 11 astronauts Neil Armstrong and Buzz Aldrin became the first humans to walk on the lunar surface. Michael Collins remained in lunar orbit aboard the Command Module. Armstrong's famous words upon stepping onto the moon were: 'That's one small step for man, one giant leap for mankind.'",
+    "question": "Who were the first two humans to walk on the moon?",
+    "ground_truth": "Neil Armstrong and Buzz Aldrin"
+  },
+  {
+    "id": "rag027",
+    "context": "The human liver is the largest internal organ of the body, weighing approximately 1.5 kg in adults. It performs over 500 vital functions, including detoxifying blood, producing bile for digestion, synthesizing proteins, and storing glycogen for energy regulation. The liver has remarkable regenerative capacity.",
+    "question": "What is the approximate weight of the human liver?",
+    "ground_truth": "approximately 1.5 kg"
+  },
+  {
+    "id": "rag028",
+    "context": "TCP/IP (Transmission Control Protocol/Internet Protocol) is the fundamental communication protocol suite of the internet. TCP handles the division of data into packets and ensures reliable delivery, while IP handles the addressing and routing of packets between devices. It was developed by Vint Cerf and Bob Kahn in the 1970s.",
+    "question": "Who developed the TCP/IP protocol?",
+    "ground_truth": "Vint Cerf and Bob Kahn"
+  },
+  {
+    "id": "rag029",
+    "context": "The Hubble Space Telescope was launched into low Earth orbit on April 24, 1990, by the Space Shuttle Discovery. It remains one of the largest and most versatile space telescopes, operating at wavelengths from ultraviolet to near-infrared. It is named after astronomer Edwin Hubble and orbits at an altitude of approximately 547 kilometers.",
+    "question": "On what date was the Hubble Space Telescope launched?",
+    "ground_truth": "April 24, 1990"
+  },
+  {
+    "id": "rag030",
+    "context": "The Magna Carta, meaning 'Great Charter,' was a royal charter of rights agreed to by King John of England in 1215. It was the first document to put into writing the principle that the king and his government were not above the law. It established that everyone was subject to the law, including the king.",
+    "question": "Which king agreed to the Magna Carta?",
+    "ground_truth": "King John of England"
+  },
+  {
+    "id": "rag031",
+    "context": "Einstein's theory of special relativity, published in 1905, introduced the famous equation E=mc2, where E is energy, m is mass, and c is the speed of light. This equation expresses the equivalence of mass and energy, showing that a small amount of mass can be converted into a tremendous amount of energy.",
+    "question": "What does the equation E=mc2 express?",
+    "ground_truth": "the equivalence of mass and energy"
+  },
+  {
+    "id": "rag032",
+    "context": "Malaria is a life-threatening disease caused by Plasmodium parasites that are transmitted to humans through the bites of infected Anopheles mosquitoes. The disease is widespread in tropical and subtropical regions. In 2022, there were an estimated 249 million malaria cases worldwide. Artemisinin-based combination therapies are the recommended treatment.",
+    "question": "What type of parasites cause malaria?",
+    "ground_truth": "Plasmodium parasites"
+  },
+  {
+    "id": "rag033",
+    "context": "The Industrial Revolution began in Britain in the late 18th century, approximately between 1760 and 1840. It marked a major turning point in history as manufacturing shifted from hand production methods to machine-based manufacturing. Key inventions included the steam engine, the spinning jenny, and the power loom.",
+    "question": "Approximately when did the Industrial Revolution begin and end in Britain?",
+    "ground_truth": "approximately between 1760 and 1840"
+  },
+  {
+    "id": "rag034",
+    "context": "The cerebral cortex is the outermost layer of the brain and is associated with higher brain functions such as thought, reasoning, language, memory, consciousness, and sensory processing. It is divided into four lobes: frontal, parietal, temporal, and occipital. The cortex is approximately 2-4 mm thick.",
+    "question": "What are the four lobes of the cerebral cortex?",
+    "ground_truth": "frontal, parietal, temporal, and occipital"
+  },
+  {
+    "id": "rag035",
+    "context": "The International Monetary Fund (IMF) was created at the Bretton Woods Conference in 1944 and came into existence in 1945. Its headquarters is in Washington, D.C. The IMF's primary mission is to ensure the stability of the international monetary system. It currently has 190 member countries.",
+    "question": "At which conference was the IMF created?",
+    "ground_truth": "the Bretton Woods Conference"
+  },
+  {
+    "id": "rag036",
+    "context": "The ozone layer is a region of Earth's stratosphere, approximately 15 to 35 kilometers above Earth's surface, containing high concentrations of ozone molecules. It absorbs most of the Sun's ultraviolet radiation, particularly UV-B and UV-C. Chlorofluorocarbons (CFCs) are the main chemicals responsible for ozone depletion.",
+    "question": "At what altitude range is the ozone layer found?",
+    "ground_truth": "approximately 15 to 35 kilometers above Earth's surface"
+  },
+  {
+    "id": "rag037",
+    "context": "Blockchain is a distributed ledger technology that records transactions across many computers in a way that the records cannot be altered retroactively without the alteration of all subsequent blocks and the consensus of the network. Bitcoin, created by Satoshi Nakamoto in 2009, was the first cryptocurrency to use blockchain technology.",
+    "question": "Who created Bitcoin and in what year?",
+    "ground_truth": "Satoshi Nakamoto in 2009"
+  },
+  {
+    "id": "rag038",
+    "context": "The Geneva Conventions are four treaties and three additional protocols that establish the standards of international humanitarian law in warfare. The first Geneva Convention was adopted in 1864. The most recent comprehensive revision was completed in 1949. They define the rights of wounded soldiers, prisoners of war, and civilians in conflict zones.",
+    "question": "In what year was the first Geneva Convention adopted?",
+    "ground_truth": "1864"
+  },
+  {
+    "id": "rag039",
+    "context": "The water cycle, also known as the hydrological cycle, describes the continuous movement of water through Earth's systems. Key processes include evaporation from oceans and land, condensation forming clouds, precipitation as rain or snow, and collection in bodies of water. Solar energy drives the entire cycle.",
+    "question": "What energy source drives the water cycle?",
+    "ground_truth": "solar energy"
+  },
+  {
+    "id": "rag040",
+    "context": "The Pythagorean theorem states that in a right triangle, the square of the length of the hypotenuse equals the sum of the squares of the lengths of the other two sides. It is expressed as a2 + b2 = c2, where c is the hypotenuse. The theorem is attributed to the ancient Greek philosopher Pythagoras.",
+    "question": "What does the Pythagorean theorem state?",
+    "ground_truth": "in a right triangle, the square of the hypotenuse equals the sum of the squares of the other two sides"
+  },
+  {
+    "id": "rag041",
+    "context": "The stock market crash of 1929, also known as Black Tuesday, occurred on October 29, 1929. It is considered the most devastating stock market crash in U.S. history and is associated with the beginning of the Great Depression. The Dow Jones Industrial Average fell 11.7% in a single day.",
+    "question": "On what date did the stock market crash known as Black Tuesday occur?",
+    "ground_truth": "October 29, 1929"
+  },
+  {
+    "id": "rag042",
+    "context": "Insulin is a hormone produced by the pancreas that regulates blood glucose levels. It allows cells to take in glucose from the blood for energy or storage. Type 1 diabetes occurs when the pancreas produces little or no insulin. Type 2 diabetes occurs when the body does not use insulin properly. Frederick Banting and Charles Best discovered insulin in 1921.",
+    "question": "Who discovered insulin and in what year?",
+    "ground_truth": "Frederick Banting and Charles Best in 1921"
+  },
+  {
+    "id": "rag043",
+    "context": "The Colosseum in Rome is an oval amphitheatre built in the center of Rome, Italy. Construction began under Emperor Vespasian of the Flavian dynasty in 72 AD and was completed in 80 AD under his successor Titus. It could hold between 50,000 and 80,000 spectators. It was used for gladiatorial contests and public spectacles.",
+    "question": "Under which emperor was the Colosseum completed?",
+    "ground_truth": "Emperor Titus"
+  },
+  {
+    "id": "rag044",
+    "context": "Machine learning is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. It focuses on developing computer programs that can access data and use it to learn for themselves. Deep learning is a subset of machine learning that uses neural networks with many layers.",
+    "question": "What is deep learning a subset of?",
+    "ground_truth": "machine learning"
+  },
+  {
+    "id": "rag045",
+    "context": "The World Health Organization (WHO) was established on 7 April 1948, which is now celebrated as World Health Day. It is a specialized agency of the United Nations responsible for international public health. Its headquarters is in Geneva, Switzerland. The WHO has 194 member states.",
+    "question": "When was the World Health Organization established?",
+    "ground_truth": "7 April 1948"
+  },
+  {
+    "id": "rag046",
+    "context": "The mitochondria are membrane-bound organelles found in the cytoplasm of eukaryotic cells. They are known as the powerhouses of the cell because they generate most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy. Mitochondria contain their own DNA, separate from the nuclear DNA.",
+    "question": "Why are mitochondria known as the powerhouses of the cell?",
+    "ground_truth": "because they generate most of the cell's supply of ATP, used as a source of chemical energy"
+  },
+  {
+    "id": "rag047",
+    "context": "The Cold War was a period of geopolitical tension between the United States and the Soviet Union and their respective allies, from approximately 1947 to 1991. The conflict was primarily ideological, with the US championing capitalism and democracy while the USSR promoted communism. The Berlin Wall, built in 1961, became its most iconic symbol.",
+    "question": "What was built in 1961 that became an iconic symbol of the Cold War?",
+    "ground_truth": "the Berlin Wall"
+  },
+  {
+    "id": "rag048",
+    "context": "CRISPR-Cas9 is a revolutionary gene-editing tool that allows scientists to precisely add, remove, or alter DNA sequences in the genome of living organisms. It was developed from natural defense mechanisms found in bacteria. Jennifer Doudna and Emmanuelle Charpentier were awarded the Nobel Prize in Chemistry in 2020 for their development of this technology.",
+    "question": "Who won the Nobel Prize in Chemistry in 2020 for developing CRISPR-Cas9?",
+    "ground_truth": "Jennifer Doudna and Emmanuelle Charpentier"
+  },
+  {
+    "id": "rag049",
+    "context": "The Paris Agreement is an international treaty on climate change that was adopted in December 2015 at the 21st Conference of the Parties (COP21) to the United Nations Framework Convention on Climate Change. It entered into force on 4 November 2016. Its goal is to limit global warming to well below 2 degrees Celsius, preferably to 1.5 degrees Celsius, compared to pre-industrial levels.",
+    "question": "What is the primary temperature goal of the Paris Agreement?",
+    "ground_truth": "to limit global warming to well below 2 degrees Celsius, preferably to 1.5 degrees Celsius"
+  },
+  {
+    "id": "rag050",
+    "context": "The semiconductor is a material with electrical conductivity between that of a conductor and an insulator. Silicon is by far the most widely used semiconductor material, forming the basis of most electronic devices including computers and smartphones. The invention of the transistor in 1947 by John Bardeen, Walter Brattain, and William Shockley launched the semiconductor era.",
+    "question": "Who invented the transistor in 1947?",
+    "ground_truth": "John Bardeen, Walter Brattain, and William Shockley"
   }
 ]

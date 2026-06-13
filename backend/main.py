@@ -82,7 +82,7 @@ class WebSocketManager:
                 connections.remove(ws)
 
 
-def build_model(model_id: str, api_key: str | None = None) -> Any:
+def build_model(model_id: str, api_key: str | None = None, base_url: str | None = None) -> Any:
     if model_id.startswith("groq:"):
         name = model_id.replace("groq:", "")
         key = api_key or settings.groq_api_key
@@ -94,6 +94,12 @@ def build_model(model_id: str, api_key: str | None = None) -> Any:
     if model_id.startswith("ollama:"):
         name = model_id.replace("ollama:", "")
         return OllamaModel(model_name=name, base_url=settings.ollama_base_url)
+    if model_id.startswith("custom:"):
+        name = model_id.replace("custom:", "")
+        if not base_url:
+            raise ValueError("base_url is required for custom model endpoints")
+        key = api_key or "none"
+        return OpenAIModel(api_key=key, model_name=name, base_url=base_url)
     raise ValueError(f"Unknown model id: {model_id}")
 
 
@@ -103,10 +109,10 @@ async def run_evaluation(run_id: str, config: dict) -> None:
     start_ts = datetime.now(timezone.utc)
 
     try:
-        model = build_model(config["model_id"], config.get("api_key"))
+        model = build_model(config["model_id"], config.get("api_key"), config.get("base_url"))
         compare_model = None
         if config.get("compare_model_id"):
-            compare_model = build_model(config["compare_model_id"], config.get("compare_api_key"))
+            compare_model = build_model(config["compare_model_id"], config.get("compare_api_key"), config.get("compare_base_url"))
 
         judge_model = GroqModel(
             api_key=settings.groq_api_key,
@@ -318,6 +324,27 @@ async def get_history():
         except Exception:
             continue
     return {"runs": runs}
+
+
+@app.delete("/api/history")
+async def delete_all_runs():
+    runs_dir = settings.results_dir
+    deleted = []
+    if os.path.exists(runs_dir):
+        for fname in os.listdir(runs_dir):
+            if not fname.endswith(".json"):
+                continue
+            run_id = fname.replace(".json", "")
+            if run_id in ("sample-demo-run-0001", "sample_run"):
+                continue
+            fpath = os.path.join(runs_dir, fname)
+            try:
+                os.remove(fpath)
+                active_runs.pop(run_id, None)
+                deleted.append(run_id)
+            except Exception:
+                pass
+    return {"deleted_count": len(deleted), "deleted": deleted}
 
 
 @app.delete("/api/history/{run_id}")

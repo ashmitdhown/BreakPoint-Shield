@@ -45,6 +45,11 @@ export async function deleteRun(runId) {
   return data
 }
 
+export async function deleteAllHistory() {
+  const { data } = await api.delete('/history')
+  return data
+}
+
 export async function getAvailableModels() {
   const { data } = await api.get('/models')
   return data

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Shield, Play, ChevronRight, AlertCircle, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Shield, Play, ChevronRight, AlertCircle } from 'lucide-react'
 import ModelSelector from '../components/ModelSelector'
 import { useEvalRun } from '../hooks/useEvalRun'
 
@@ -33,7 +33,9 @@ function Toggle({ checked, onChange, label }) {
 }
 
 export default function HomePage() {
-  const [modelId, setModelId] = useState('groq:llama3-8b-8192')
+  const [modelId, setModelId] = useState('')
+  const [customConfig, setCustomConfig] = useState(null)
+  const [compareCustomConfig, setCompareCustomConfig] = useState(null)
   const [selectedCats, setSelectedCats] = useState(CATEGORIES.map((c) => c.id))
   const [iterativeMode, setIterativeMode] = useState(false)
   const [compareMode, setCompareMode] = useState(false)
@@ -47,16 +49,29 @@ export default function HomePage() {
   }
 
   const handleRun = () => {
-    if (!modelId) return
-    run({
+    if (!modelId || modelId === 'custom:') return
+    const payload = {
       model_id: modelId,
       categories: selectedCats,
       iterative_mode: iterativeMode,
-      compare_model_id: compareMode && compareModelId ? compareModelId : undefined,
-    })
+    }
+    if (customConfig?.base_url) {
+      payload.base_url = customConfig.base_url
+    }
+    if (compareMode && compareModelId && compareModelId !== 'custom:') {
+      payload.compare_model_id = compareModelId
+      if (compareCustomConfig?.base_url) {
+        payload.compare_base_url = compareCustomConfig.base_url
+      }
+    }
+    run(payload)
   }
 
-  const canRun = !!modelId && selectedCats.length > 0 && !loading
+  const isModelReady = !!modelId && modelId !== 'custom:' && (
+    !modelId.startsWith('custom:') || (customConfig?.base_url && customConfig?.model_name)
+  )
+
+  const canRun = isModelReady && selectedCats.length > 0 && !loading
 
   return (
     <div className="flex-1 flex flex-col matrix-bg scan-line">
@@ -79,9 +94,9 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-4xl font-black text-surface-50 tracking-tight mb-3">
-            LLM{' '}
-            <span className="text-gradient glitch-text" data-text="RedTeam">
-              RedTeam
+            Break
+            <span className="text-gradient glitch-text" data-text="Point">
+              Point
             </span>
           </h1>
           <p className="text-surface-400 text-lg max-w-md mx-auto leading-relaxed">
@@ -109,9 +124,11 @@ export default function HomePage() {
               <ModelSelector
                 value={modelId}
                 onChange={setModelId}
+                onCustomConfig={setCustomConfig}
                 compareMode={compareMode}
                 compareValue={compareModelId}
                 onCompareChange={setCompareModelId}
+                onCompareCustomConfig={setCompareCustomConfig}
               />
             </div>
 
@@ -124,6 +141,7 @@ export default function HomePage() {
                     <button
                       key={cat.id}
                       type="button"
+                      id={`cat-${cat.id}`}
                       onClick={() => toggleCat(cat.id)}
                       className={`text-left px-3 py-2.5 rounded-lg border text-sm transition-all duration-150 ${
                         checked

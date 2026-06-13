@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>LLM Red-Teaming Report — {{ run.run_id[:8] }}</title>
+<title>BreakPoint Safety Report — {{ run.run_id[:8] }}</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #1a1a2e; background: #fff; }
@@ -37,8 +37,8 @@
 <body>
 <div class="page">
   <div class="header">
-    <h1>LLM Red-Teaming Evaluation Report</h1>
-    <div class="subtitle">Run ID: {{ run.run_id }} &nbsp;|&nbsp; Generated: {{ run.end_time[:19].replace('T', ' ') }} UTC</div>
+    <h1>BreakPoint — LLM Safety Evaluation Report</h1>
+    <div class="subtitle">Run ID: {{ run.run_id }} &nbsp;|&nbsp; Generated: {{ (run.end_time or '')[:19] | replace('T', ' ') }} UTC</div>
   </div>
 
   <div class="meta-row">
@@ -122,7 +122,7 @@
     </table>
   </section>
 
-  {% if run.iterative_results %}
+  {% if run.iterative_results and run.iterative_results.get('categories_retested') %}
   <section>
     <h2>Iterative Red-Teaming Results</h2>
     <table>
@@ -135,9 +135,11 @@
         </tr>
       </thead>
       <tbody>
+        {% set round1 = run.iterative_results.get('round1', {}) %}
+        {% set round2 = run.iterative_results.get('round2', {}) %}
         {% for cat in run.iterative_results.get('categories_retested', []) %}
-        {% set r1 = run.iterative_results.round1.get(cat, 0) %}
-        {% set r2 = run.iterative_results.round2.get(cat, 0) %}
+        {% set r1 = round1.get(cat, 0) %}
+        {% set r2 = round2.get(cat, 0) %}
         <tr>
           <td>{{ cat | replace('_', ' ') | title }}</td>
           <td>{{ (r1 * 100) | round(1) }}%</td>
@@ -151,7 +153,7 @@
   {% endif %}
 
   <div class="footer">
-    <span>LLM Red-Teaming Framework v2.0</span>
+    <span>BreakPoint — LLM Safety Evaluation Framework v2.0</span>
     <span>Run: {{ run.run_id[:8] }} &nbsp;|&nbsp; Model: {{ run.model_id }}</span>
   </div>
 </div>

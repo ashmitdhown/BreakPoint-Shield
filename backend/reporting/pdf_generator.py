@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import logging
-from fpdf import FPDF
-from fpdf.enums import XPos, YPos
+from fpdf import FPDF  # type: ignore[import]
+from fpdf.enums import XPos, YPos  # type: ignore[import]
 
 logger = logging.getLogger("uvicorn.error")
 

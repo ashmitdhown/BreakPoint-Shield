@@ -1,80 +1,97 @@
 # BreakPoint
 
-BreakPoint is an automated red-teaming tool for Large Language Models. It throws hundreds of adversarial prompts at your LLM and streams the failures to a real-time dashboard so you can see exactly where the model breaks before you put it in production.
+**The open-source adversarial red-teaming suite for LLMs. Test your own custom models and find where they break — before your users do.**
 
-It currently evaluates models across 6 categories: Hallucinations, Jailbreaks, Prompt Injections, Toxicity, Demographic Bias, and RAG Faithfulness.
+Self-hosted. Two pillars under one dashboard: **Automated Attacks** (500+ prompts across hallucination, jailbreaks, toxicity, bias, prompt injection, and RAG faithfulness) and **Iterative Red-Teaming** (a MART loop that auto-generates targeted adversarial variations to exploit the exact weaknesses it finds).
 
-## How it works
+<br/>
+<div align="center">
+  <img src="./dashboard.png" alt="BreakPoint Dashboard" width="100%" />
+</div>
+<br/>
 
-1. **Select a target:** Point BreakPoint at an OpenAI, Groq, or local Ollama model.
-2. **Run the gauntlet:** The Python engine sends concurrent adversarial prompts across your selected categories.
-3. **Live Dashboard:** Results stream into the React UI over WebSockets in real-time.
-4. **Iterative Red-Teaming (MART):** If enabled, the system uses an LLM judge to analyze the failures from Round 1 and automatically generates new, targeted attacks for Round 2.
-5. **Reporting:** Exports a PDF audit report of the run.
+---
 
-## Getting Started
+### Why
 
-### Prerequisites
-- Python 3.11+
-- Node.js 20+
-- A Groq API key (used for the LLM judge, get one free at [console.groq.com](https://console.groq.com))
+The LLM security landscape is fractured. The enterprise tools that test for compliance and toxicity are closed-source, expensive, and stop at a dashboard. The open-source scripts that do exist are just CLI JSON dumps with no UI and no way to visualize real-time streams. Nobody does both, open, in one place.
 
-### Local Setup
+BreakPoint is the one that's open, streaming, and closes the loop: it doesn't just say "your model failed a jailbreak," it shows you the exact prompt, the exact compliance failure, and *auto-generates the fix*.
+
+### What it does
+
+**Automated Gauntlet**
+- **Hallucination:** Factual accuracy assessment using verified knowledge datasets.
+- **Jailbreak Resistance:** Safety guardrail bypass using curated datasets (AdvBench + JailbreakBench).
+- **Prompt Injection:** System prompt override attacks.
+- **Toxicity:** Harmful content detection via local classifiers.
+- **Bias:** Demographic fairness across 5 axes using sentiment deltas.
+- **RAG Faithfulness:** Context grounding accuracy.
+
+**Iterative MART Loop (Iterative Red-Teaming)**
+- **Analyze:** Identifies your model's top 3 failing categories.
+- **Attack:** Uses an LLM judge (`llama-3.3-70b-versatile`) to auto-generate 15 new, highly-targeted adversarial prompts per weak category.
+- **Re-test:** Re-evaluates the model to prove robustness.
+
+**Both**
+- **Bring Your Own Model (BYOM):** Test any custom REST endpoint, a local Ollama model, or commercial APIs. If you built it, BreakPoint can test it.
+- **Real-time streaming:** Per-prompt evaluations stream to the React dashboard over WebSockets.
+- **Self-hosted, your API keys, your data:** No subscriptions. No tracking.
+- **Audit Reports:** One-click PDF safety certificates.
+
+---
+
+### Quick Start
 
 ```bash
 git clone https://github.com/ashmitdhown/BreakPoint-Shield.git
 cd BreakPoint-Shield
 
-# Install root dependencies for concurrently
 npm install
-
-# Install all backend and frontend dependencies
 npm run install:all
-
-# Configure environment
-cp .env.example .env 
-# Add your GROQ_API_KEY to the .env file now!
-
-# Optional but recommended: pre-cache the evaluation datasets (~2 mins)
-npm run seed
-
-# Run the dev servers (starts both FastAPI and Vite concurrently)
-npm run dev
+npm run seed              # pre-cache datasets
+npm run dev               # http://localhost:5173
 ```
 
-Visit **http://localhost:5173** to access the dashboard.
-
-### Docker Setup
-
-If you prefer Docker:
+Or launch it in one command using Docker:
 ```bash
-git clone https://github.com/ashmitdhown/BreakPoint-Shield.git
-cd BreakPoint-Shield
-cp .env.example .env # Don't forget your Groq API key
-npm run docker:up
+cp .env.example .env      # Add your GROQ_API_KEY
+npm run docker:up         # → http://localhost:3000
 ```
-Visit http://localhost:3000.
 
-## Configuration (.env)
+### Configuration (`.env`)
 
-| Variable | Description |
+| Variable | What it does |
 |---|---|
-| `GROQ_API_KEY` | Required. Used for the LLM judge (`llama-3.3-70b-versatile`). |
-| `OPENAI_API_KEY` | Optional. If you want to evaluate OpenAI models. |
-| `OLLAMA_BASE_URL` | Optional. Defaults to `http://localhost:11434` for local models. |
-| `LANGCHAIN_API_KEY` | Optional. Set this and `LANGCHAIN_TRACING_V2=true` to enable LangSmith tracing. |
+| `GROQ_API_KEY` | **Required.** Powers the LLM judge (`llama-3.3-70b-versatile`) for classification and MART generation. Free from console.groq.com. |
+| `OPENAI_API_KEY` | Optional. Set this if you want to attack OpenAI models. |
+| `OLLAMA_BASE_URL` | Optional. Point to `http://localhost:11434` to test local models offline. |
+| `LANGCHAIN_API_KEY` | Optional. Set `LANGCHAIN_TRACING_V2=true` alongside this to enable LangSmith tracing. |
 
-## Development Commands
+### What you get
 
+Each evaluation run writes persistent state to the `./runs` directory.
+| Feature | Description |
+|---|---|
+| **Live Dashboard** | React + Zustand dashboard fed by FastAPI WebSockets. |
+| **Comparative Mode** | Run two models (e.g., Llama 3 vs. GPT-4) side-by-side and watch them race. |
+| **PDF Certificates** | `fpdf2` compiled audit reports with grading and detailed breakdowns. |
+| **LangSmith Tracing** | Every LLM call is decorated with `@traceable` for deep latency and token debugging. |
+
+### Offline Mode
+
+If you just want to run a dry-run smoke test to see the CLI and backend logic in action without hitting live endpoints:
 ```bash
-# Run backend tests
-cd backend && pytest tests/ -v
-
-# Run a quick terminal smoke test without the UI
 npm run demo
 ```
 
-## Tech Stack
-- **Backend:** FastAPI, Python, Pytest, fpdf2, LangSmith
-- **Frontend:** React, Vite, Tailwind CSS, Zustand, Recharts
-- **Infrastructure:** Docker Compose
+### Tests
+
+```bash
+# Core evaluator logic, webhooks, and mock engines
+cd backend && pytest tests/ -v
+```
+
+### License
+
+MIT

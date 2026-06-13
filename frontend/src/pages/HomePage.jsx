@@ -40,7 +40,14 @@ export default function HomePage() {
   const [iterativeMode, setIterativeMode] = useState(false)
   const [compareMode, setCompareMode] = useState(false)
   const [compareModelId, setCompareModelId] = useState('')
+  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('breakpoint_api_key') || '')
   const { run, loading, error } = useEvalRun()
+
+  // Save API key to session storage when it changes
+  useState(() => {
+    if (apiKey) sessionStorage.setItem('breakpoint_api_key', apiKey)
+    else sessionStorage.removeItem('breakpoint_api_key')
+  }, [apiKey])
 
   const toggleCat = (id) => {
     setSelectedCats((prev) =>
@@ -63,6 +70,9 @@ export default function HomePage() {
       if (compareCustomConfig?.base_url) {
         payload.compare_base_url = compareCustomConfig.base_url
       }
+    }
+    if (apiKey.trim()) {
+      payload.api_key = apiKey.trim()
     }
     run(payload)
   }
@@ -130,6 +140,22 @@ export default function HomePage() {
                 onCompareChange={setCompareModelId}
                 onCompareCustomConfig={setCompareCustomConfig}
               />
+              
+              <div className="mt-4">
+                <label className="text-xs text-surface-400 font-medium mb-1.5 block">
+                  API Key (Optional)
+                </label>
+                <input
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => {
+                    setApiKey(e.target.value);
+                    sessionStorage.setItem('breakpoint_api_key', e.target.value);
+                  }}
+                  placeholder="Skips .env fallback if provided..."
+                  className="w-full bg-surface-900 border border-surface-700/50 rounded-lg px-3 py-2 text-sm text-surface-200 placeholder:text-surface-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all"
+                />
+              </div>
             </div>
 
             <div>

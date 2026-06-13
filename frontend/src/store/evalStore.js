@@ -29,21 +29,23 @@ export const useEvalStore = create((set, get) => ({
   results: null,
   wsStatus: 'disconnected',
   errorMessage: null,
+  martPhase: 'round1', // 'round1' | 'analyzing' | 'round2' | 'complete'
 
-  startRun: (runId, modelId, categories) => {
+  startRun: (runId, modelId, categories, iterativeMode) => {
     const cats = categories || DEFAULT_CATEGORIES
     const categoryStates = {}
     cats.forEach((id) => {
       categoryStates[id] = initialCategoryState(id)
     })
     set({
-      currentRun: { runId, modelId, startTime: Date.now(), categories: cats },
+      currentRun: { runId, modelId, startTime: Date.now(), categories: cats, iterativeMode },
       categoryStates,
       logEntries: [],
       overallScore: null,
       results: null,
       wsStatus: 'connecting',
       errorMessage: null,
+      martPhase: 'round1',
     })
   },
 
@@ -71,9 +73,8 @@ export const useEvalStore = create((set, get) => ({
             type: msg.latest_result === 'fail' ? 'fail' : 'pass',
             category: msg.category,
             prompt: msg.latest_prompt,
-            ts: new Date().toISOString(),
-          },
         ],
+        martPhase: state.martPhase === 'analyzing' ? 'round2' : state.martPhase,
       }))
     } else if (msg.type === 'category_complete') {
       set((state) => ({
@@ -89,7 +90,7 @@ export const useEvalStore = create((set, get) => ({
         },
       }))
     } else if (msg.type === 'run_complete') {
-      set({ overallScore: msg.overall_score })
+      set({ overallScore: msg.overall_score, martPhase: 'complete' })
     } else if (msg.type === 'error') {
       set({ wsStatus: 'error', errorMessage: msg.message })
     } else if (msg.type === 'iterative_start') {
@@ -104,6 +105,7 @@ export const useEvalStore = create((set, get) => ({
             ts: new Date().toISOString(),
           },
         ],
+        martPhase: 'analyzing',
       }))
     }
   },
@@ -119,5 +121,6 @@ export const useEvalStore = create((set, get) => ({
       results: null,
       wsStatus: 'disconnected',
       errorMessage: null,
+      martPhase: 'round1',
     }),
 }))

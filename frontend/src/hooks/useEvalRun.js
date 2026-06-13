@@ -14,7 +14,7 @@ export function useEvalRun() {
     setError(null)
     try {
       const { run_id: runId } = await startEval(config)
-      storeStartRun(runId, config.model_id, config.categories)
+      storeStartRun(runId, config.model_id, config.categories, config.iterative_mode)
       navigate(`/eval/${runId}`)
     } catch (err) {
       setError(err.message)

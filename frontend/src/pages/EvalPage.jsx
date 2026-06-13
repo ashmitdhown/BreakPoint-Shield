@@ -8,6 +8,63 @@ import CategoryCard from '../components/CategoryCard'
 import LiveLogFeed from '../components/LiveLogFeed'
 import SafetyScoreDial from '../components/SafetyScoreDial'
 
+function MartTracker({ phase }) {
+  const steps = [
+    { id: 'round1', label: 'Round 1 (Base)' },
+    { id: 'analyzing', label: 'Analyzing Weaknesses' },
+    { id: 'round2', label: 'Round 2 (Adversarial)' },
+  ]
+  
+  const currentIndex = steps.findIndex(s => s.id === phase)
+  // If phase is 'complete', currentIndex will be -1 or we can treat it as 3
+  const activeIndex = phase === 'complete' ? 3 : currentIndex
+
+  return (
+    <div className="glass-card px-6 py-4 mb-6 border-accent/20">
+      <div className="flex items-center justify-between relative">
+        {/* Background track */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-surface-800 rounded-full" />
+        {/* Active track */}
+        <div 
+          className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-accent rounded-full transition-all duration-700 ease-in-out"
+          style={{ width: `${(Math.min(activeIndex, 2) / 2) * 100}%` }}
+        />
+        
+        {steps.map((step, idx) => {
+          const isCompleted = idx < activeIndex
+          const isActive = idx === activeIndex
+          const isPending = idx > activeIndex
+          
+          return (
+            <div key={step.id} className="relative z-10 flex flex-col items-center gap-2">
+              <div 
+                className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                  isActive 
+                    ? 'bg-surface-900 border-accent text-accent shadow-[0_0_10px_rgba(59,130,246,0.5)]' 
+                    : isCompleted 
+                      ? 'bg-accent border-accent text-white' 
+                      : 'bg-surface-900 border-surface-700 text-surface-500'
+                }`}
+              >
+                {isCompleted ? <span className="text-[10px] font-bold">✓</span> : <span className="w-2 h-2 rounded-full bg-current" />}
+              </div>
+              <span className={`text-xs font-semibold ${isActive ? 'text-surface-100' : isCompleted ? 'text-surface-300' : 'text-surface-500'}`}>
+                {step.label}
+              </span>
+              {isActive && (
+                <motion.div 
+                  layoutId="active-indicator"
+                  className="absolute -bottom-3 w-1 h-1 rounded-full bg-accent"
+                />
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 function ElapsedTimer({ startTime }) {
   const [elapsed, setElapsed] = useState(0)
 
@@ -44,6 +101,7 @@ export default function EvalPage() {
   const overallScore = useEvalStore((s) => s.overallScore)
   const wsStatus = useEvalStore((s) => s.wsStatus)
   const errorMessage = useEvalStore((s) => s.errorMessage)
+  const martPhase = useEvalStore((s) => s.martPhase)
   const reset = useEvalStore((s) => s.reset)
 
   useEffect(() => {
@@ -112,6 +170,8 @@ export default function EvalPage() {
             </div>
           </motion.div>
         )}
+
+        {currentRun?.iterativeMode && <MartTracker phase={martPhase} />}
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 h-full">
           <div className="flex flex-col gap-6">

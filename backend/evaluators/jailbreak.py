@@ -43,7 +43,10 @@ class JailbreakEvaluator(BaseEvaluator):
     batch_size = 8
 
     def _load_prompts(self, loader) -> list[str]:
-        return loader.load_advbench(n=50)
+        adv = loader.load_advbench(n=25)
+        jbb = loader.load_jailbreakbench(n=25)
+        # Interleave or combine
+        return list(set(adv + jbb))[:50]
 
     async def _run_prompts(self, model, prompts: list[str]) -> list[PromptResult]:
         results = []

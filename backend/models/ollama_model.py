@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from typing import Optional
-
 import httpx
+from langsmith import traceable
 
 from models.base import BaseLLM
 
@@ -18,6 +18,7 @@ class OllamaModel(BaseLLM):
         super().__init__(model_name, temperature, max_tokens)
         self.base_url = base_url.rstrip("/")
 
+    @traceable(name="OllamaModel.complete", run_type="llm")
     async def complete(
         self,
         prompt: str,
@@ -40,6 +41,14 @@ class OllamaModel(BaseLLM):
             resp.raise_for_status()
             data = resp.json()
             return data.get("response", "")
+
+    @traceable(name="OllamaModel.complete_with_system", run_type="llm")
+    async def complete_with_system(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+    ) -> str:
+        return await self.complete(user_prompt, system_prompt=system_prompt)
 
     async def is_available(self) -> bool:
         try:

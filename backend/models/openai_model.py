@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Optional
 
 from openai import AsyncOpenAI
+from langsmith import traceable
 
 from models.base import BaseLLM
 
@@ -22,6 +23,7 @@ class OpenAIModel(BaseLLM):
             kwargs["base_url"] = base_url
         self._client = AsyncOpenAI(**kwargs)
 
+    @traceable(name="OpenAIModel.complete", run_type="llm")
     async def complete(
         self,
         prompt: str,

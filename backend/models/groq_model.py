@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Optional
+from langsmith import traceable
 
 from groq import AsyncGroq
 
@@ -18,6 +19,7 @@ class GroqModel(BaseLLM):
         super().__init__(model_name, temperature, max_tokens)
         self._client = AsyncGroq(api_key=api_key)
 
+    @traceable(name="GroqModel.complete", run_type="llm")
     async def complete(
         self,
         prompt: str,
